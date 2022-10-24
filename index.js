@@ -16,8 +16,12 @@ const arrayDomens = [
     'igmtv',       'kinopoisk'
 ]
 
-const stringSession = new StringSession("1BAAOMTQ5LjE1NC4xNjcuOTEAUFWFCtD8yfzIgva1RGy1F5DI7w2P6gnfd2WAViT+SKlGrUHlW/X9TQLoUzREwAdmp0O+whmkTGk2uzgMwrvOtvPURWqOSl3YYzRBIoPR+7dL2x8KmfeN2Kr5C5IBdWosLarSDTf4eFzCHtpnbex9lS7wAWr8m+dBNUTSuwwk+ixNYocvH9ZOEoUfoZbYzso5xhht8+pnkoz3CNXpSPPN6CCOvG3lSbA/AVQge/fGG5ZqrrIleSUOD318umZ1USqALFSLBqhii28T3jFv7sixkfJWvCu55dfQ6k5NrhC4QKfFz61V1/+kl3YW8uAwh+MRWOWrcVHSlOzn51rLS43p0lg=");
-const client = new TelegramClient(stringSession, process.env.API_ID, process.env.API_HASH, {});
+const client = new TelegramClient(process.env.SESSION, process.env.API_ID, process.env.API_HASH, {});
+const client1 = new TelegramClient(process.env.SESSION1, process.env.API_ID, process.env.API_HASH, {});
+const client2 = new TelegramClient(process.env.SESSION2, process.env.API_ID, process.env.API_HASH, {});
+const client3 = new TelegramClient(process.env.SESSION3, process.env.API_ID, process.env.API_HASH, {});
+
+const clientsArr = [client, client1, client2, client3];
 
 bot.onText(/\/start/, (msg) => {
     let replyOptions = {
@@ -67,8 +71,14 @@ const sleep = (waitTimeInMs) => new Promise(resolve => setTimeout(resolve, waitT
 
 const setDomainToUser = async () => {
     await client.connect();
+    await client1.connect();
+    await client2.connect();
+    await client3.connect();
+
     for(let i of arrayDomens){
-        await sleep(3000).then(async() => {
+        await sleep(2500).then(async() => {
+            var cl = Math.floor(Math.random() * clientsArr.length);
+            console.log(cl);
             try{
                 const checkUsername = await client.invoke(
                     new Api.account.CheckUsername({
